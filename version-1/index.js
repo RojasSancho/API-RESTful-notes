@@ -29,7 +29,7 @@ For:
 - End the connection
 */
 const server = http.createServer((request, response) => {
-	/* Set the response header:
+	/* Set the Response Header:
 	Like a label that indicates to the client what type of content they are receiving.
 	It's response type dependant.
 	
