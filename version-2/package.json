@@ -6,12 +6,13 @@
   "name": "version-2",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
+  "devDependencies": {JS API RESTful example (using Express and MongoDB)},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "node app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Hermes Rojas Sancho",
   "license": "ISC",
   "description": ""
 }
