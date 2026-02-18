@@ -71,4 +71,3 @@ app.get('/datos', async (request, response) => {
 // --------------- START SERVER -----------------
 // app.listen(port) → starts the server and waits for HTTP requests
 app.listen(4000, () => console.log('API with DB running on port 4000'));
-
