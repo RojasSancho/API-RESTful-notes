@@ -1,18 +1,17 @@
 {
+  "name": "version-2",
+  "version": "1.0.0",
+  "description": "JS API RESTful example (using Express and MongoDB)",
+  "main": "app.js",
+  "author": "Hermes Rojas Sancho",
+  "license": "ISC",
   "dependencies": {
     "express": "^5.2.1",
     "mongoose": "^9.2.1"
   },
-  "name": "version-2",
-  "version": "1.0.0",
-  "main": "app.js",
-  "devDependencies": {JS API RESTful example (using Express and MongoDB)},
   "scripts": {
     "start": "node app.js",
     "dev": "node app.js"
-  },
-  "keywords": [],
-  "author": "Hermes Rojas Sancho",
-  "license": "ISC",
-  "description": ""
+  }
 }
+
