@@ -1,54 +1,74 @@
 /*
- * Basic implementation of a client-server model using HTTP and Express
- * Demonstrates a simple REST API connected to a MongoDB database.
- * Requires Node.js and MongoDB running locally.
- * 
- * Lifecycle:
- * 1. The server connects to a MongoDB database
- * 2. A schema is defined to represent sensor documents.
- * 3. The server listens for incoming HTTP requests.
- * 4. When a client accesses '/datos', the database is queried.
- * 5. The results are returned in JSON format.
- * 
+ * Example REST API with Express and MongoDB
+ *
+ * Notes for beginners:
+ * - Node.js → JavaScript runtime that allows you to run JS code on your computer/server.
+ * - Express → Library to create a web server and define endpoints (routes).
+ * - MongoDB → NoSQL database to store documents (JSON-like objects).
+ * - Mongoose → Library to interact with MongoDB using JavaScript objects (ODM).
+ *
+ * Workflow of this API:
+ * 1. Connect to the MongoDB database 'telemetria_db'.
+ * 2. Define a Schema to specify how a sensor document looks.
+ * 3. Create a Model (Sensor) to query and interact with the collection 'monitoreo_sensores'.
+ * 4. Define a GET endpoint '/datos':
+ *    a) Fetches all documents from the collection.
+ *    b) Sorts them by 'fecha' descending (newest first).
+ *    c) Returns the results in JSON format.
+ * 5. Start the server on port 4000 and wait for requests.
+ *
  * Author: Hermes Rojas Sancho
  */
 
-// Import libraries
-// express → creates the web server
-// mongoose → enables communication with MongoDB using models
+// --------------- IMPORT LIBRARIES -----------------
+// express → used to create the HTTP server and define routes
+// mongoose → allows us to define schemas and models to work with MongoDB
 const express = require('express');
 const mongoose = require('mongoose');
 
-// This creates the HTTP server 
-// Routes such as '/datos' are defined from this instance
+// --------------- CREATE SERVER -----------------
+// Create an Express app instance; this is your HTTP server
+// All routes (like '/datos') are defined from this object
 const app = express();
 
-// mongoose.connect('') → Connect to MongoDB
-// If the database does not exist, MongoDB creates it automatically when data is inserted
-mongoose.connect('mongodb://localhost:27017/telemetria_db');
+// --------------- CONNECT TO MONGODB -----------------
+// mongoose.connect() → Connects to a MongoDB database
+// If the database does not exist, MongoDB creates it automatically
+mongoose.connect('mongodb://localhost:27017/telemetria_db')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-// mongoose.Schema() → Define the data model (schema)
-// Specifies how documents in the collection are structured
+// --------------- DEFINE SCHEMA -----------------
+// Schema → defines the structure of documents in a collection
+// Each document represents a sensor reading
 const SensorSchema = new mongoose.Schema({
-	id_sensor: String,
-	valor: Number,
-	fecha: Date,
+	id_sensor: String, // ID of the sensor
+	valor: Number,     // Value recorded by the sensor
+	fecha: Date,       // Timestamp of the reading
 });
-// mongoose.model() → Creates an ODM model for the MongoDB collection
-// Sensor → interface used to query the "monitoreo_sensores" collection
+
+// --------------- CREATE MODEL -----------------
+// Model → interface to query the 'monitoreo_sensores' collection
+// Using the SensorSchema defined above
 const Sensor = mongoose.model('monitoreo_sensores', SensorSchema);
 
-/*  
- * app.get(): Defines a GET endpoint
- * When a client accesses '/datos', the server:
- * 1. Retrieves all documents from MongoDB
- * 2. Sorts them by date in descending order [.sort({date: -1})]
- * 3. Returns the results in JSON format
-*/  
+// --------------- DEFINE ENDPOINT -----------------
+// GET '/datos' → When someone visits this URL, the server executes this function
 app.get('/datos', async (request, response) => {
-	const results = await Sensor.find().sort({fecha: -1});
-	response.json(results);
+	try {
+		// Sensor.find() → fetch all documents
+		// .sort({fecha: -1}) → sort by 'fecha' descending (most recent first)
+		const results = await Sensor.find().sort({fecha: -1});
+		
+		// response.json() → return results in JSON format
+		response.json(results);
+	} catch (err) {
+		// If something goes wrong, send an error message
+		response.status(500).json({ error: 'Internal Server Error', details: err.message });
+	}
 });
 
-// Starts the HTTP server and listens for incoming connections on port 4000
-app.listen(4000, () => console.log('API with DB on port 4000'));
+// --------------- START SERVER -----------------
+// app.listen(port) → starts the server and waits for HTTP requests
+app.listen(4000, () => console.log('API with DB running on port 4000'));
+
