@@ -13,7 +13,7 @@ const SensorSchema = new mongoose.Schema({
 const Sensor = mongoose.model('monitoreo_sensores', SensorSchema);
 
 app.get('/datos', async (request, response) => {
-	const results = await Sensor.find().sort({fecha: -s1});
+	const results = await Sensor.find().sort({fecha: -1});
 	response.json(results);
 });
 
